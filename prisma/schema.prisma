@@ -26,6 +26,7 @@ model User {
   // Relations
   institutionProfile Institution?
   adopterProfile     Adopter?
+  child              Child?
 }
 
 model Institution {
@@ -45,6 +46,7 @@ model Institution {
   user                      User      @relation(fields: [user_id], references: [id])
   // Relations
   adopterProfile            Adopter[]
+  childProfile              Child[]
 }
 
 model Adopter {
@@ -57,4 +59,25 @@ model Adopter {
   // Institution
   institution_id String?
   institution    Institution? @relation(fields: [institution_id], references: [id])
+  // Relations
+  childProfile   Child[]
+}
+
+model Child {
+  id              String      @id @default(uuid())
+  full_name       String
+  nickname        String?
+  age             String
+  // Data by institution
+  health_record   String?     @db.Text
+  education_level String?
+  // User
+  user_id         String      @unique
+  user            User        @relation(fields: [user_id], references: [id])
+  // Institution
+  institutionId   String
+  institution     Institution @relation(fields: [institutionId], references: [id])
+  // Adopter
+  adopter_id      String?
+  adopter         Adopter?    @relation(fields: [adopter_id], references: [id])
 }
