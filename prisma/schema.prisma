@@ -15,12 +15,30 @@ enum Role {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
-  role      Role
-  is_active Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                 String       @id @default(uuid())
+  name               String
+  email              String       @unique
+  password           String
+  role               Role
+  is_active          Boolean      @default(true)
+  updatedAt          DateTime     @updatedAt
+  createdAt          DateTime     @default(now())
+  // Relations
+  institutionProfile Institution?
+}
+
+model Institution {
+  id                        String   @id @default(uuid())
+  name                      String
+  cnpj                      String   @unique
+  phone                     String   @unique
+  full_address              String
+  legal_representative_name String
+  foundation_date           DateTime @db.Date
+  license_number            String
+  website_url               String
+  updatedAt                 DateTime @updatedAt
+  createdAt                 DateTime @default(now())
+  user_id                   String   @unique
+  user                      User     @relation(fields: [user_id], references: [id])
 }
