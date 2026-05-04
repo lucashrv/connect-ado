@@ -8,20 +8,19 @@ datasource db {
   provider = "postgresql"
 }
 
-enum Roles {
-  ADMIN
-  INSTITUTE
+enum Role {
+  INSTITUTION
   ADOPTER
+  CHILD
 }
 
 model User {
-  id              String    @id @default(uuid())
-  name            String
-  email           String    @unique
-  password        String
-  roles           Roles[]
-  isActive        Boolean   @default(true)
-  emailVerifiedAt DateTime?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role
+  is_active Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
