@@ -25,20 +25,36 @@ model User {
   createdAt          DateTime     @default(now())
   // Relations
   institutionProfile Institution?
+  adopterProfile     Adopter?
 }
 
 model Institution {
-  id                        String   @id @default(uuid())
+  id                        String    @id @default(uuid())
   name                      String
-  cnpj                      String   @unique
-  phone                     String   @unique
+  cnpj                      String    @unique
+  phone                     String    @unique
   full_address              String
   legal_representative_name String
-  foundation_date           DateTime @db.Date
+  foundation_date           DateTime  @db.Date
   license_number            String
   website_url               String
-  updatedAt                 DateTime @updatedAt
-  createdAt                 DateTime @default(now())
-  user_id                   String   @unique
-  user                      User     @relation(fields: [user_id], references: [id])
+  updatedAt                 DateTime  @updatedAt
+  createdAt                 DateTime  @default(now())
+  // User
+  user_id                   String    @unique
+  user                      User      @relation(fields: [user_id], references: [id])
+  // Relations
+  adopterProfile            Adopter[]
+}
+
+model Adopter {
+  id             String       @id @default(uuid())
+  full_name      String
+  governmentId   String       @unique
+  // User
+  user_id        String       @unique
+  user           User         @relation(fields: [user_id], references: [id])
+  // Institution
+  institution_id String?
+  institution    Institution? @relation(fields: [institution_id], references: [id])
 }
