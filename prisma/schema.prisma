@@ -14,9 +14,14 @@ enum Role {
   CHILD
 }
 
+enum Gender {
+  MASCULINE
+  FEMININE
+}
+
 model User {
   id                 String       @id @default(uuid())
-  name               String
+  full_name          String
   email              String       @unique
   password           String
   role               Role
@@ -51,8 +56,9 @@ model Institution {
 
 model Adopter {
   id             String       @id @default(uuid())
-  full_name      String
-  governmentId   String       @unique
+  governmentId   String?      @unique
+  updatedAt      DateTime     @updatedAt
+  createdAt      DateTime     @default(now())
   // User
   user_id        String       @unique
   user           User         @relation(fields: [user_id], references: [id])
@@ -64,20 +70,39 @@ model Adopter {
 }
 
 model Child {
-  id              String      @id @default(uuid())
-  full_name       String
-  nickname        String?
-  age             String
+  id                  String               @id @default(uuid())
+  nickname            String?
+  birth_date          DateTime             @db.Date
+  gender              Gender
+  updatedAt           DateTime             @updatedAt
+  createdAt           DateTime             @default(now())
   // Data by institution
-  health_record   String?     @db.Text
-  education_level String?
+  health_record       String?              @db.Text
+  education_level     String?
   // User
-  user_id         String      @unique
-  user            User        @relation(fields: [user_id], references: [id])
+  user_id             String               @unique
+  user                User                 @relation(fields: [user_id], references: [id])
   // Institution
-  institutionId   String
-  institution     Institution @relation(fields: [institutionId], references: [id])
+  institutionId       String
+  institution         Institution          @relation(fields: [institutionId], references: [id])
   // Adopter
-  adopter_id      String?
-  adopter         Adopter?    @relation(fields: [adopter_id], references: [id])
+  adopter_id          String?
+  adopter             Adopter?             @relation(fields: [adopter_id], references: [id])
+  // Relations
+  childPersonalManual ChildPersonalManual?
+}
+
+model ChildPersonalManual {
+  id                String  @id @default(uuid())
+  daily_routine     String? @db.Text
+  favorite_food     String?
+  favorite_music    String?
+  favorite_activity String?
+  hobbies           String?
+  study_habits      String? @db.Text
+  fears             String?
+  notes             String? @db.Text
+  // Child
+  child_id          String  @unique
+  child             Child   @relation(fields: [child_id], references: [id])
 }
