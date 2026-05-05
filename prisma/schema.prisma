@@ -13,8 +13,9 @@ enum Role {
 }
 
 enum Gender {
-  MASCULINE
-  FEMININE
+  MALE
+  FEMALE
+  OTHER
 }
 
 model User {
@@ -54,7 +55,12 @@ model Institution {
 model Adopter {
   id             String       @id @default(uuid())
   full_name      String
-  governmentId   String?      @unique
+  cpf            String       @unique
+  phone          String
+  birth_date     DateTime     @db.Date
+  gender         Gender
+  address        String
+  occupation     String
   updatedAt      DateTime     @updatedAt
   createdAt      DateTime     @default(now())
   // User
