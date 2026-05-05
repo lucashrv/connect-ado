@@ -19,9 +19,7 @@ enum Gender {
 
 model User {
   id                 String       @id @default(uuid())
-  full_name          String
   email              String       @unique
-  username           String?      @unique
   password           String
   role               Role
   is_active          Boolean      @default(true)
@@ -55,6 +53,7 @@ model Institution {
 
 model Adopter {
   id             String       @id @default(uuid())
+  full_name      String
   governmentId   String?      @unique
   updatedAt      DateTime     @updatedAt
   createdAt      DateTime     @default(now())
@@ -70,6 +69,7 @@ model Adopter {
 
 model Child {
   id                  String               @id @default(uuid())
+  full_name           String
   nickname            String?
   birth_date          DateTime             @db.Date
   gender              Gender
