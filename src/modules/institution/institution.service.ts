@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 import type { CreateInstitutionBody } from './schemas/create-institution.schema';
 import { InstitutionsRepository } from './repositories/institution.repository';
 
@@ -15,6 +19,14 @@ export class InstitutionService {
       throw new ConflictException(
         'CNPJ de instituição já cadastrado no sistema',
       );
+    }
+
+    const findEmail = await this.repository.findByEmail(
+      createInstitutionDto.email,
+    );
+
+    if (findEmail) {
+      throw new BadRequestException('E-mail já cadastrado');
     }
 
     return this.repository.create(createInstitutionDto);

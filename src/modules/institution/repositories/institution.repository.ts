@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { CreateInstitutionBody } from '../schemas/create-institution.schema';
-import type { Institution } from '@prisma/client';
 
 @Injectable()
 export class InstitutionsRepository {
@@ -38,7 +37,11 @@ export class InstitutionsRepository {
     });
   }
 
-  async findByCnpj(cnpj: string): Promise<Institution | null> {
+  async findByCnpj(cnpj: string) {
     return await this.prisma.institution.findUnique({ where: { cnpj } });
+  }
+
+  async findByEmail(email: string) {
+    return await this.prisma.user.findUnique({ where: { email } });
   }
 }
