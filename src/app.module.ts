@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { validateEnv } from 'config/env/env.validation';
 import { InstitutionModule } from './modules/institution/institution.module';
 import { AdopterModule } from 'modules/adopter/adopter.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { AdopterModule } from 'modules/adopter/adopter.module';
     PrismaModule,
     InstitutionModule,
     AdopterModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
