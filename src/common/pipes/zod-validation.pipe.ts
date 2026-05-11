@@ -22,7 +22,7 @@ export class ZodValidationPipe implements PipeTransform {
     const schema = this.schemas[type as keyof Schemas];
 
     if (!schema) {
-      throw new BadRequestException('Schema is required!');
+      return value;
     }
 
     const result = schema.safeParse(value);

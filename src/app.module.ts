@@ -7,6 +7,7 @@ import { validateEnv } from 'config/env/env.validation';
 import { InstitutionModule } from './modules/institution/institution.module';
 import { AdopterModule } from 'modules/adopter/adopter.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { ChildModule } from 'modules/child/child.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { AuthModule } from './modules/auth/auth.module';
     InstitutionModule,
     AdopterModule,
     AuthModule,
+    ChildModule,
   ],
   controllers: [AppController],
   providers: [AppService],
