@@ -60,6 +60,7 @@ model Child {
   full_name           String
   nickname            String?
   birth_date          DateTime             @db.Date
+  cpf                 String               @unique
   gender              Gender
   updatedAt           DateTime             @updatedAt
   createdAt           DateTime             @default(now())

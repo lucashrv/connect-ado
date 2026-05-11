@@ -8,6 +8,7 @@ export const createChildBodySchema = z.object({
   birth_date: z.string().refine(val => !isNaN(Date.parse(val)), {
     message: 'Data de nascimento inválida',
   }),
+  cpf: z.string().length(11, 'CPF deve ter 11 dígitos'),
   gender: z.enum(['MALE', 'FEMALE', 'OTHER']),
 });
 

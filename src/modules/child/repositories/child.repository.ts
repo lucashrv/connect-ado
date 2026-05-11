@@ -23,6 +23,7 @@ export class ChildRepository {
       const child = await prisma.child.create({
         data: {
           full_name: data.full_name,
+          cpf: data.cpf,
           nickname: data.nickname,
           birth_date: new Date(data.birth_date).toISOString(),
           gender: data.gender,
