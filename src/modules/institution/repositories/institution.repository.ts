@@ -47,6 +47,14 @@ export class InstitutionsRepository {
     });
   }
 
+  async linkAdopterToChild(childId: string, adopterId: string) {
+    return await this.prisma.child.update({
+      where: { id: childId },
+      data: { adopter_id: adopterId },
+      include: { adopter: true },
+    });
+  }
+
   async getInstitution(userId: string) {
     return await this.prisma.institution.findUnique({
       where: { user_id: userId },
@@ -60,5 +68,17 @@ export class InstitutionsRepository {
 
   async findByEmail(email: string) {
     return await this.prisma.user.findUnique({ where: { email } });
+  }
+
+  async findAdopterById(id: string, institutionId: string) {
+    console.log(institutionId);
+
+    return await this.prisma.adopter.findUnique({
+      where: { id, institution_id: institutionId },
+    });
+  }
+
+  async findChildById(id: string, institutionId: string) {
+    return await this.prisma.child.findUnique({ where: { id, institutionId } });
   }
 }

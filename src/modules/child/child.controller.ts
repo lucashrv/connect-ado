@@ -7,13 +7,14 @@ import { ZodValidate } from 'common/decorators/zod-validate.decorator';
 import { CurrentUser } from 'common/decorators/current-user.decorator';
 import type { User } from 'common/decorators/current-user.decorator';
 import { Roles } from 'common/decorators/roles.decorator';
+import { RolesGuard } from 'modules/auth/roles.guard';
 
 @Controller('child')
 export class ChildController {
   constructor(private readonly childService: ChildService) {}
 
   @Post('signup')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('INSTITUTION')
   @ZodValidate({ body: createChildBodySchema })
   async create(

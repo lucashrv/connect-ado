@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import type { CreateInstitutionBody } from './schemas/create-institution.schema';
 import { InstitutionsRepository } from './repositories/institution.repository';
@@ -43,6 +44,36 @@ export class InstitutionService {
     }
 
     return this.repository.linkAdopter(user.id, institutionId);
+  }
+
+  async linkAdopterToChild(childId: string, adopterId: string, userId: string) {
+    const institution = await this.repository.getInstitution(userId);
+
+    if (!institution) {
+      throw new NotFoundException('Instituição não encontrado');
+    }
+
+    const adopter = await this.repository.findAdopterById(
+      adopterId,
+      institution.id,
+    );
+
+    if (!adopter) {
+      throw new NotFoundException('Adotante não encontrado');
+    }
+
+    const child = await this.repository.findAdopterById(
+      adopterId,
+      institution.id,
+    );
+
+    if (!child) {
+      throw new NotFoundException(
+        'Criança ou adolescente em acolhimento não encontrado',
+      );
+    }
+
+    return this.repository.linkAdopterToChild(childId, adopterId);
   }
 
   async getInstitution(institutionId: string) {

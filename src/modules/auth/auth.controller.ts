@@ -14,6 +14,8 @@ import type { LoginBody } from './schemas/login.schema';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { CurrentUser } from 'common/decorators/current-user.decorator';
 import type { User } from 'common/decorators/current-user.decorator';
+import { RolesGuard } from './roles.guard';
+import { Roles } from 'common/decorators/roles.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -27,7 +29,8 @@ export class AuthController {
   }
 
   @Get('me')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('INSTITUTION', 'ADOPTER', 'CHILD')
   getMe(@CurrentUser() user: User) {
     return user;
   }
