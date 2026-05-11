@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import type { CreateInstitutionBody } from './schemas/create-institution.schema';
 import { InstitutionsRepository } from './repositories/institution.repository';
+import { LinkAdopterBody } from './schemas/link-adopter.schema';
 
 @Injectable()
 export class InstitutionService {
@@ -30,5 +31,17 @@ export class InstitutionService {
     }
 
     return this.repository.create(createInstitutionDto);
+  }
+
+  async linkAdopter(linkAdopterDto: LinkAdopterBody, institutionId: string) {
+    const user = await this.repository.findByEmail(linkAdopterDto.email);
+
+    if (!user || (!!user && user.role !== 'ADOPTER')) {
+      throw new BadRequestException(
+        'Email inválido ou não pertence a um adotante',
+      );
+    }
+
+    return this.repository.linkAdopter(user.id, institutionId);
   }
 }

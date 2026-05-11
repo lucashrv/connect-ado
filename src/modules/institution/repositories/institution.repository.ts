@@ -37,6 +37,22 @@ export class InstitutionsRepository {
     });
   }
 
+  async linkAdopter(userId: string, institutionId: string) {
+    const institution = await this.getInstitution(institutionId);
+
+    return await this.prisma.adopter.update({
+      where: { user_id: userId },
+      data: { institution_id: institution?.id },
+      include: { user: true },
+    });
+  }
+
+  async getInstitution(userId: string) {
+    return await this.prisma.institution.findUnique({
+      where: { user_id: userId },
+    });
+  }
+
   async findByCnpj(cnpj: string) {
     return await this.prisma.institution.findUnique({ where: { cnpj } });
   }
