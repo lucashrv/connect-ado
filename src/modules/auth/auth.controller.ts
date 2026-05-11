@@ -1,8 +1,19 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ZodValidate } from 'common/decorators/zod-validate.decorator';
 import { loginBodySchema } from './schemas/login.schema';
 import type { LoginBody } from './schemas/login.schema';
+import { JwtAuthGuard } from './jwt-auth.guard';
+import { CurrentUser } from 'common/decorators/current-user.decorator';
+import type { User } from 'common/decorators/current-user.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -13,5 +24,11 @@ export class AuthController {
   @ZodValidate({ body: loginBodySchema })
   async login(@Body() body: LoginBody) {
     return this.authService.login(body);
+  }
+
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  getMe(@CurrentUser() user: User) {
+    return user;
   }
 }
