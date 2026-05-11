@@ -44,4 +44,8 @@ export class InstitutionService {
 
     return this.repository.linkAdopter(user.id, institutionId);
   }
+
+  async getInstitution(institutionId: string) {
+    return await this.repository.getInstitution(institutionId);
+  }
 }

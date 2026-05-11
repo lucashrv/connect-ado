@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards, Patch } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Patch, Get } from '@nestjs/common';
 import { InstitutionService } from './institution.service';
 import type { CreateInstitutionBody } from './schemas/create-institution.schema';
 import { createInstitutionBodySchema } from './schemas/create-institution.schema';
@@ -29,5 +29,12 @@ export class InstitutionController {
     @Body() linkAdopterDto: LinkAdopterBody,
   ) {
     return this.institutionService.linkAdopter(linkAdopterDto, user.id);
+  }
+
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  @Roles('INSTITUTION')
+  async getInstitution(@CurrentUser() user: User) {
+    return this.institutionService.getInstitution(user.id);
   }
 }

@@ -50,6 +50,7 @@ export class InstitutionsRepository {
   async getInstitution(userId: string) {
     return await this.prisma.institution.findUnique({
       where: { user_id: userId },
+      include: { adopterProfile: true, childProfile: true },
     });
   }
 
