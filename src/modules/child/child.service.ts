@@ -19,7 +19,6 @@ export class ChildService {
 
     const findInstitution =
       await this.repository.findInstitution(institutionId);
-    console.log(institutionId);
 
     if (!findInstitution)
       throw new NotFoundException('ID da instituição não encontrado');

@@ -55,4 +55,11 @@ export class InstitutionController {
   async getInstitution(@CurrentUser() user: User) {
     return this.institutionService.getInstitution(user.id);
   }
+
+  @Get('/get-adopters-childs-not-linked')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('INSTITUTION')
+  async getAdoptersAndChildsNotLinked(@CurrentUser() user: User) {
+    return this.institutionService.getAdoptersAndChildsNotLinked(user.id);
+  }
 }

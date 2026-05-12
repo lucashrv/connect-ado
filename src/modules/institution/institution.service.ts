@@ -53,6 +53,20 @@ export class InstitutionService {
       throw new NotFoundException('Instituição não encontrado');
     }
 
+    const child = await this.repository.findChildById(childId, institution.id);
+
+    if (!child) {
+      throw new NotFoundException(
+        'Criança ou adolescente em acolhimento não encontrado',
+      );
+    }
+
+    if (child.adopter_id) {
+      throw new BadRequestException(
+        'Criança já possui vínculo com um adotante',
+      );
+    }
+
     const adopter = await this.repository.findAdopterById(
       adopterId,
       institution.id,
@@ -62,21 +76,14 @@ export class InstitutionService {
       throw new NotFoundException('Adotante não encontrado');
     }
 
-    const child = await this.repository.findAdopterById(
-      adopterId,
-      institution.id,
-    );
-
-    if (!child) {
-      throw new NotFoundException(
-        'Criança ou adolescente em acolhimento não encontrado',
-      );
-    }
-
     return this.repository.linkAdopterToChild(childId, adopterId);
   }
 
   async getInstitution(institutionId: string) {
     return await this.repository.getInstitution(institutionId);
+  }
+
+  async getAdoptersAndChildsNotLinked(institutionId: string) {
+    return await this.repository.getAdoptersAndChildsNotLinked(institutionId);
   }
 }

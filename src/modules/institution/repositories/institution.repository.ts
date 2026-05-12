@@ -62,6 +62,31 @@ export class InstitutionsRepository {
     });
   }
 
+  async getAdoptersAndChildsNotLinked(institutionId: string) {
+    const institution = await this.getInstitution(institutionId);
+
+    const adopters = await this.prisma.adopter.findMany({
+      where: {
+        childProfile: {
+          none: {},
+        },
+        institution_id: institution?.id,
+      },
+    });
+
+    const childs = await this.prisma.child.findMany({
+      where: {
+        adopter_id: null,
+        institution_id: institution?.id,
+      },
+    });
+
+    return {
+      adopters,
+      childs,
+    };
+  }
+
   async findByCnpj(cnpj: string) {
     return await this.prisma.institution.findUnique({ where: { cnpj } });
   }
@@ -71,8 +96,6 @@ export class InstitutionsRepository {
   }
 
   async findAdopterById(id: string, institutionId: string) {
-    console.log(institutionId);
-
     return await this.prisma.adopter.findUnique({
       where: { id, institution_id: institutionId },
     });
