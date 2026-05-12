@@ -86,4 +86,8 @@ export class InstitutionService {
   async getAdoptersAndChildsNotLinked(institutionId: string) {
     return await this.repository.getAdoptersAndChildsNotLinked(institutionId);
   }
+
+  async getAdoptersNotLinkedToInstitution() {
+    return await this.repository.getAdoptersNotLinkedToInstitution();
+  }
 }

@@ -77,7 +77,7 @@ export class InstitutionsRepository {
     const childs = await this.prisma.child.findMany({
       where: {
         adopter_id: null,
-        institution_id: institution?.id,
+        institutionId: institution?.id,
       },
     });
 
@@ -85,6 +85,15 @@ export class InstitutionsRepository {
       adopters,
       childs,
     };
+  }
+
+  async getAdoptersNotLinkedToInstitution() {
+    return await this.prisma.adopter.findMany({
+      where: {
+        institution_id: null,
+      },
+      include: { user: true },
+    });
   }
 
   async findByCnpj(cnpj: string) {
