@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { CreateInstitutionBody } from '../schemas/create-institution.schema';
+import { ListParams } from '../schemas/list-adopter-child.schema';
 
 @Injectable()
 export class InstitutionsRepository {
@@ -93,6 +94,50 @@ export class InstitutionsRepository {
         institution_id: null,
       },
       include: { user: true },
+    });
+  }
+
+  async listChildren(institutionUserId: string, params: ListParams) {
+    const { page, limit, search } = params;
+
+    const institution = await this.prisma.institution.findUnique({
+      where: { user_id: institutionUserId },
+    });
+
+    if (!institution) {
+      throw new NotFoundException('Instituição não encontrada');
+    }
+
+    return this.prisma.child.findMany({
+      where: {
+        institutionId: institution.id,
+        full_name: { contains: search, mode: 'insensitive' },
+      },
+      skip: (page - 1) * limit,
+      take: limit,
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  async listAdopters(institutionUserId: string, params: ListParams) {
+    const { page, limit, search } = params;
+    const institution = await this.prisma.institution.findUnique({
+      where: { user_id: institutionUserId },
+    });
+
+    if (!institution) {
+      throw new NotFoundException('Instituição não encontrada');
+    }
+
+    return this.prisma.adopter.findMany({
+      where: {
+        institution_id: institution.id,
+        full_name: { contains: search, mode: 'insensitive' },
+      },
+      include: { childProfile: { select: { full_name: true } } },
+      skip: (page - 1) * limit,
+      take: limit,
+      orderBy: { createdAt: 'desc' },
     });
   }
 

@@ -7,6 +7,7 @@ import {
 import type { CreateInstitutionBody } from './schemas/create-institution.schema';
 import { InstitutionsRepository } from './repositories/institution.repository';
 import { LinkAdopterBody } from './schemas/link-adopter.schema';
+import { ListParams } from './schemas/list-adopter-child.schema';
 
 @Injectable()
 export class InstitutionService {
@@ -89,5 +90,13 @@ export class InstitutionService {
 
   async getAdoptersNotLinkedToInstitution() {
     return await this.repository.getAdoptersNotLinkedToInstitution();
+  }
+
+  async listChildren(institutionUserId: string, params: ListParams) {
+    return this.repository.listChildren(institutionUserId, params);
+  }
+
+  async listAdopters(institutionUserId: string, params: ListParams) {
+    return this.repository.listAdopters(institutionUserId, params);
   }
 }

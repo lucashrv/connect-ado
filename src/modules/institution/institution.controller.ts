@@ -1,4 +1,12 @@
-import { Controller, Post, Body, UseGuards, Patch, Get } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  Patch,
+  Get,
+  Query,
+} from '@nestjs/common';
 import { InstitutionService } from './institution.service';
 import type { CreateInstitutionBody } from './schemas/create-institution.schema';
 import { createInstitutionBodySchema } from './schemas/create-institution.schema';
@@ -12,6 +20,10 @@ import type { LinkAdopterBody } from './schemas/link-adopter.schema';
 import { linkAdopterToChildBodySchema } from './schemas/link-adopter-to-child.schema';
 import type { LinkAdopterToChildBody } from './schemas/link-adopter-to-child.schema';
 import { RolesGuard } from 'modules/auth/roles.guard';
+import {
+  listParamsSchema,
+  type ListParams,
+} from './schemas/list-adopter-child.schema';
 
 @Controller('institution')
 export class InstitutionController {
@@ -68,5 +80,21 @@ export class InstitutionController {
   @Roles('INSTITUTION')
   async getAdoptersNotLinkedToInstitution() {
     return this.institutionService.getAdoptersNotLinkedToInstitution();
+  }
+
+  @Get('/childrens')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('INSTITUTION')
+  @ZodValidate({ query: listParamsSchema })
+  async listChildren(@CurrentUser() user: User, @Query() query: ListParams) {
+    return this.institutionService.listChildren(user.id, query);
+  }
+
+  @Get('/adopters')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('INSTITUTION')
+  @ZodValidate({ query: listParamsSchema })
+  async listAdopters(@CurrentUser() user: User, @Query() query: ListParams) {
+    return this.institutionService.listAdopters(user.id, query);
   }
 }
