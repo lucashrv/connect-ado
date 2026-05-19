@@ -10,6 +10,8 @@ import { Roles } from 'common/decorators/roles.decorator';
 import { RolesGuard } from 'modules/auth/roles.guard';
 import type { UpdateChildHealthEducationBody } from './schemas/update-child-health-education.schema';
 import { updateChildHealthEducation } from './schemas/update-child-health-education.schema';
+import { updateChildManualSchema } from './schemas/update-ChildPersonalManual.schema';
+import type { UpdateChildManualBody } from './schemas/update-ChildPersonalManual.schema';
 
 @Controller('child')
 export class ChildController {
@@ -35,12 +37,26 @@ export class ChildController {
     @Body() updateChildHealthEducationBody: UpdateChildHealthEducationBody,
     @Param('childId') childId: string,
   ) {
-    console.log(updateChildHealthEducationBody, childId, user.id);
-
     return this.childService.updateHealthEducation(
       updateChildHealthEducationBody,
       childId,
       user.id,
+    );
+  }
+
+  @Put('personal-manual/:childId')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('CHILD')
+  @ZodValidate({ body: updateChildManualSchema })
+  async updatePersonalManual(
+    @CurrentUser() user: User,
+    @Body() updateChildManualBody: UpdateChildManualBody,
+    @Param('childId') childId: string,
+  ) {
+    return this.childService.updatePersonalManual(
+      updateChildManualBody,
+      childId,
+      user,
     );
   }
 }

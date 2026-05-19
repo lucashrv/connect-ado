@@ -7,6 +7,7 @@ import {
 import { CreateChildBody } from './schemas/create-child.schema';
 import { ChildRepository } from './repositories/child.repository';
 import { UpdateChildHealthEducationBody } from './schemas/update-child-health-education.schema';
+import { UpdateChildManualBody } from './schemas/update-ChildPersonalManual.schema';
 
 @Injectable()
 export class ChildService {
@@ -35,6 +36,8 @@ export class ChildService {
   ) {
     const child = await this.repository.findById(childId);
 
+    if (!child) throw new NotFoundException('Criança não encontrada');
+
     const institution =
       await this.repository.findInstitution(institutionUserId);
 
@@ -46,5 +49,27 @@ export class ChildService {
       );
 
     return this.repository.updateHealthEducation(data, childId);
+  }
+
+  async updatePersonalManual(
+    data: UpdateChildManualBody,
+    childId: string,
+    authenticatedUser: {
+      id: string;
+      role: 'INSTITUTION' | 'CHILD' | 'ADOPTER';
+    },
+  ) {
+    const child = await this.repository.findById(childId);
+    console.log(child);
+
+    if (!child) throw new NotFoundException('Criança não encontrada');
+
+    if (child.user_id !== authenticatedUser.id) {
+      throw new UnauthorizedException(
+        'Você só pode alterar o seu próprio manual',
+      );
+    }
+
+    return this.repository.updatePersonalManual(childId, data);
   }
 }

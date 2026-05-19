@@ -3,6 +3,7 @@ import { PrismaService } from 'prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { CreateChildBody } from '../schemas/create-child.schema';
 import { UpdateChildHealthEducationBody } from '../schemas/update-child-health-education.schema';
+import { UpdateChildManualBody } from '../schemas/update-ChildPersonalManual.schema';
 
 @Injectable()
 export class ChildRepository {
@@ -51,6 +52,22 @@ export class ChildRepository {
       data: {
         health_record: data.health_record,
         education_level: data.education_level,
+      },
+    });
+  }
+
+  async updatePersonalManual(childId: string, data: UpdateChildManualBody) {
+    return this.prisma.childPersonalManual.update({
+      where: { child_id: childId },
+      data: {
+        daily_routine: data.daily_routine,
+        favorite_food: data.favorite_food,
+        favorite_music: data.favorite_music,
+        favorite_activity: data.favorite_activity,
+        hobbies: data.hobbies,
+        study_habits: data.study_habits,
+        fears: data.fears,
+        notes: data.notes,
       },
     });
   }
