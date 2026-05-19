@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { CreateChildBody } from '../schemas/create-child.schema';
+import { UpdateChildHealthEducationBody } from '../schemas/update-child-health-education.schema';
 
 @Injectable()
 export class ChildRepository {
@@ -41,9 +42,28 @@ export class ChildRepository {
     });
   }
 
+  async updateHealthEducation(
+    data: UpdateChildHealthEducationBody,
+    childId: string,
+  ) {
+    return this.prisma.child.update({
+      where: { id: childId },
+      data: {
+        health_record: data.health_record,
+        education_level: data.education_level,
+      },
+    });
+  }
+
   async findByEmail(email: string) {
     return this.prisma.user.findUnique({
       where: { email },
+    });
+  }
+
+  async findById(id: string) {
+    return this.prisma.child.findUnique({
+      where: { id },
     });
   }
 
