@@ -38,21 +38,22 @@ model Institution {
 }
 
 model Adopter {
-  id             String       @id @default(uuid())
+  id             String        @id @default(uuid())
   full_name      String
-  cpf            String       @unique
+  cpf            String        @unique
   phone          String
-  birth_date     DateTime     @db.Date
+  birth_date     DateTime      @db.Date
   gender         Gender
   address        String
   occupation     String
-  updatedAt      DateTime     @updatedAt
-  createdAt      DateTime     @default(now())
-  user_id        String       @unique
+  updatedAt      DateTime      @updatedAt
+  createdAt      DateTime      @default(now())
+  user_id        String        @unique
   institution_id String?
-  institution    Institution? @relation(fields: [institution_id], references: [id])
-  user           User         @relation(fields: [user_id], references: [id])
+  institution    Institution?  @relation(fields: [institution_id], references: [id])
+  user           User          @relation(fields: [user_id], references: [id])
   childProfile   Child[]
+  adopterPosts   AdopterPost[]
 }
 
 model Child {
@@ -99,4 +100,17 @@ enum Gender {
   MALE
   FEMALE
   OTHER
+}
+
+model AdopterPost {
+  id        String   @id @default(uuid())
+  title     String
+  content   String   @db.Text
+  photo_url String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isLiked   Boolean  @default(false)
+
+  adopter_id String
+  adopter    Adopter @relation(fields: [adopter_id], references: [id], onDelete: Cascade)
 }

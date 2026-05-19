@@ -8,6 +8,7 @@ import { InstitutionModule } from './modules/institution/institution.module';
 import { AdopterModule } from 'modules/adopter/adopter.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ChildModule } from 'modules/child/child.module';
+import { PostModule } from 'modules/post/post.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { ChildModule } from 'modules/child/child.module';
     AdopterModule,
     AuthModule,
     ChildModule,
+    PostModule,
   ],
   controllers: [AppController],
   providers: [AppService],
