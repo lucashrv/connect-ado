@@ -44,18 +44,18 @@ export class ChildController {
     );
   }
 
-  @Put('personal-manual/:childId')
+  @Put('personal-manual/:childUserId')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('CHILD')
   @ZodValidate({ body: updateChildManualSchema })
   async updatePersonalManual(
     @CurrentUser() user: User,
     @Body() updateChildManualBody: UpdateChildManualBody,
-    @Param('childId') childId: string,
+    @Param('childUserId') childUserId: string,
   ) {
     return this.childService.updatePersonalManual(
       updateChildManualBody,
-      childId,
+      childUserId,
       user,
     );
   }

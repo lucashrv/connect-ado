@@ -53,23 +53,23 @@ export class ChildService {
 
   async updatePersonalManual(
     data: UpdateChildManualBody,
-    childId: string,
+    childUserId: string,
     authenticatedUser: {
       id: string;
       role: 'INSTITUTION' | 'CHILD' | 'ADOPTER';
     },
   ) {
-    const child = await this.repository.findById(childId);
-    console.log(child);
+    const userChild = await this.repository.findUserById(childUserId);
 
-    if (!child) throw new NotFoundException('Criança não encontrada');
+    if (!userChild || !userChild.child)
+      throw new NotFoundException('Criança não encontrada');
 
-    if (child.user_id !== authenticatedUser.id) {
+    if (userChild.child.user_id !== authenticatedUser.id) {
       throw new UnauthorizedException(
         'Você só pode alterar o seu próprio manual',
       );
     }
 
-    return this.repository.updatePersonalManual(childId, data);
+    return this.repository.updatePersonalManual(userChild.child.id, data);
   }
 }

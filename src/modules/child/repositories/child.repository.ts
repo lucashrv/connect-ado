@@ -89,4 +89,11 @@ export class ChildRepository {
       where: { user_id: id },
     });
   }
+
+  async findUserById(id: string) {
+    return this.prisma.user.findUnique({
+      where: { id: id },
+      include: { child: true },
+    });
+  }
 }
