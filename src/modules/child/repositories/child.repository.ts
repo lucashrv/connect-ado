@@ -72,6 +72,12 @@ export class ChildRepository {
     });
   }
 
+  async getPersonalManual(childId: string) {
+    return this.prisma.childPersonalManual.findUnique({
+      where: { child_id: childId },
+    });
+  }
+
   async findByEmail(email: string) {
     return this.prisma.user.findUnique({
       where: { email },

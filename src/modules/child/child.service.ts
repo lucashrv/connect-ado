@@ -72,4 +72,12 @@ export class ChildService {
 
     return this.repository.updatePersonalManual(userChild.child.id, data);
   }
+
+  async getPersonalManual(childUserId: string) {
+    const userChild = await this.repository.findUserById(childUserId);
+
+    if (!userChild || !userChild.child) return [];
+
+    return this.repository.getPersonalManual(userChild.child.id);
+  }
 }

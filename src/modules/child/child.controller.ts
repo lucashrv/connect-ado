@@ -1,4 +1,12 @@
-import { Controller, Post, Body, UseGuards, Param, Put } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  Param,
+  Put,
+  Get,
+} from '@nestjs/common';
 import { ChildService } from './child.service';
 import { JwtAuthGuard } from 'modules/auth/jwt-auth.guard';
 import { createChildBodySchema } from './schemas/create-child.schema';
@@ -58,5 +66,12 @@ export class ChildController {
       childUserId,
       user,
     );
+  }
+
+  @Get('personal-manual/:childUserId')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('CHILD')
+  async getPersonalManual(@Param('childUserId') childUserId: string) {
+    return this.childService.getPersonalManual(childUserId);
   }
 }
