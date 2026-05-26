@@ -8,6 +8,7 @@ import {
   Get,
   UseInterceptors,
   UploadedFile,
+  Delete,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { JwtAuthGuard } from 'modules/auth/jwt-auth.guard';
@@ -38,14 +39,20 @@ export class PostController {
   }
 
   @Get('timeline')
-  @Roles('CHILD')
+  @Roles('CHILD', 'ADOPTER')
   async getTimeline(@CurrentUser() user: User) {
-    return this.postService.listTimeline(user.id);
+    return this.postService.listTimeline(user);
   }
 
   @Patch(':postId/like')
   @Roles('CHILD')
   async toggleLike(@Param('postId') postId: string, @CurrentUser() user: User) {
     return this.postService.togglePostLike(postId, user.id);
+  }
+
+  @Delete(':postId')
+  @Roles('ADOPTER')
+  async deletePost(@Param('postId') postId: string, @CurrentUser() user: User) {
+    return this.postService.deletePost(postId, user);
   }
 }

@@ -13,6 +13,9 @@ export class PostRepository {
   async findChildByUserId(userId: string) {
     return this.prisma.child.findUnique({ where: { user_id: userId } });
   }
+  async findInstitutionByUserId(userId: string) {
+    return this.prisma.institution.findUnique({ where: { user_id: userId } });
+  }
 
   async findPostById(postId: string) {
     return this.prisma.adopterPost.findUnique({ where: { id: postId } });
@@ -40,6 +43,12 @@ export class PostRepository {
     return this.prisma.adopterPost.findMany({
       where: { adopter_id: adopterId },
       orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  async deletePost(postId: string) {
+    return this.prisma.adopterPost.delete({
+      where: { id: postId },
     });
   }
 }
