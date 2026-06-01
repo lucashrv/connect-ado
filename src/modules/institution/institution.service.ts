@@ -99,4 +99,47 @@ export class InstitutionService {
   async listAdopters(institutionUserId: string, params: ListParams) {
     return this.repository.listAdopters(institutionUserId, params);
   }
+
+  async unlinkAdopterChild(childId: string, userId: string) {
+    const institution = await this.repository.getInstitution(userId);
+
+    if (!institution) {
+      throw new NotFoundException('Instituição não encontrada');
+    }
+
+    const child = await this.repository.findChildById(childId, institution.id);
+
+    if (!child) {
+      throw new NotFoundException(
+        'Criança ou adolescente em acolhimento não encontrado',
+      );
+    }
+
+    if (!child.adopter_id) {
+      throw new BadRequestException(
+        'Esta criança não possui nenhum vínculo ativo',
+      );
+    }
+
+    return this.repository.unlinkAdopterChild(childId);
+  }
+
+  async unlinkAdopterInstitution(adopterId: string, userId: string) {
+    const institution = await this.repository.getInstitution(userId);
+
+    if (!institution) {
+      throw new NotFoundException('Instituição não encontrada');
+    }
+
+    const adopter = await this.repository.findAdopterById(
+      adopterId,
+      institution.id,
+    );
+
+    if (!adopter) {
+      throw new NotFoundException('Adotante não encontrado nesta instituição');
+    }
+
+    return this.repository.unlinkAdopterInstitution(adopterId);
+  }
 }

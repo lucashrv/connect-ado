@@ -6,6 +6,7 @@ import {
   Patch,
   Get,
   Query,
+  Param,
 } from '@nestjs/common';
 import { InstitutionService } from './institution.service';
 import type { CreateInstitutionBody } from './schemas/create-institution.schema';
@@ -96,5 +97,25 @@ export class InstitutionController {
   @ZodValidate({ query: listParamsSchema })
   async listAdopters(@CurrentUser() user: User, @Query() query: ListParams) {
     return this.institutionService.listAdopters(user.id, query);
+  }
+
+  @Patch('unlink-adopter-child/:childId')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('INSTITUTION')
+  async unlinkAdopterChild(
+    @CurrentUser() user: User,
+    @Param('childId') childId: string,
+  ) {
+    return this.institutionService.unlinkAdopterChild(childId, user.id);
+  }
+
+  @Patch('unlink-adopter-institution/:adopterId')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('INSTITUTION')
+  async unlinkAdopterInstitution(
+    @CurrentUser() user: User,
+    @Param('adopterId') adopterId: string,
+  ) {
+    return this.institutionService.unlinkAdopterInstitution(adopterId, user.id);
   }
 }

@@ -134,7 +134,7 @@ export class InstitutionsRepository {
         institution_id: institution.id,
         full_name: { contains: search, mode: 'insensitive' },
       },
-      include: { childProfile: { select: { full_name: true } } },
+      include: { childProfile: { select: { full_name: true, id: true } } },
       skip: (page - 1) * limit,
       take: limit,
       orderBy: { createdAt: 'desc' },
@@ -157,5 +157,27 @@ export class InstitutionsRepository {
 
   async findChildById(id: string, institutionId: string) {
     return await this.prisma.child.findUnique({ where: { id, institutionId } });
+  }
+
+  async unlinkAdopterChild(childId: string) {
+    return await this.prisma.child.update({
+      where: { id: childId },
+      data: { adopter_id: null },
+    });
+  }
+
+  async unlinkAdopterInstitution(adopterId: string) {
+    return await this.prisma.$transaction(async prisma => {
+      await prisma.child.updateMany({
+        where: { adopter_id: adopterId },
+        data: { adopter_id: null },
+      });
+
+      return await prisma.adopter.update({
+        where: { id: adopterId },
+        data: { institution_id: null },
+        include: { user: true },
+      });
+    });
   }
 }
