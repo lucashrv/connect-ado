@@ -73,8 +73,9 @@ export class ChildRepository {
   }
 
   async getPersonalManual(childId: string) {
-    return this.prisma.childPersonalManual.findUnique({
+    return this.prisma.childPersonalManual.findFirst({
       where: { child_id: childId },
+      include: { child: true },
     });
   }
 
@@ -100,6 +101,18 @@ export class ChildRepository {
     return this.prisma.user.findUnique({
       where: { id: id },
       include: { child: true },
+    });
+  }
+
+  async findAdopterByUserId(id: string) {
+    return this.prisma.adopter.findUnique({
+      where: { user_id: id },
+    });
+  }
+
+  async findChildByAdopterId(id: string) {
+    return this.prisma.child.findFirst({
+      where: { adopter_id: id },
     });
   }
 }

@@ -74,4 +74,11 @@ export class ChildController {
   async getPersonalManual(@Param('childUserId') childUserId: string) {
     return this.childService.getPersonalManual(childUserId);
   }
+
+  @Get('personal-manual')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADOPTER')
+  async getPersonalManualByAdopter(@CurrentUser() user: User) {
+    return this.childService.getPersonalManualByAdopter(user.id);
+  }
 }

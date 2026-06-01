@@ -80,4 +80,15 @@ export class ChildService {
 
     return this.repository.getPersonalManual(userChild.child.id);
   }
+
+  async getPersonalManualByAdopter(adopterUserId: string) {
+    const adopter = await this.repository.findAdopterByUserId(adopterUserId);
+    if (!adopter) return [];
+
+    const child = await this.repository.findChildByAdopterId(adopter.id);
+
+    if (!child) return [];
+
+    return this.repository.getPersonalManual(child.id);
+  }
 }
